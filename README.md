@@ -126,9 +126,9 @@ Contributions are welcome! If you'd like to contribute, please follow these step
 
 ## Screenshots
 
+*Upload Interface*
 ![upload](https://github.com/user-attachments/assets/ee374188-2793-41f9-976a-7c605d7984af)
 
-*Upload Interface*
 
 *Summary Display with Typing Animation*
 ![summary](https://github.com/user-attachments/assets/442d2b38-b3f3-4f5d-9b07-ed9aa19580a4)
