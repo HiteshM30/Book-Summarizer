@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Summarizer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .upload-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        input[type="file"] {
+            padding: 0.5rem;
+            border: 2px dashed #1a73e8;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1557b0;
+        }
+
+        .summary-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 200px;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #1a73e8;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: #1a73e8;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        #summary-text {
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>PDF Summarizer</h1>
+    
+    <div class="upload-container">
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+            <input type="file" name="file" accept=".pdf" id="pdfInput">
+            <button type="submit" id="submitBtn">Upload and Summarize</button>
+        </form>
+        <div class="loader" id="loader">
+            Analyzing PDF... <div class="typing-cursor"></div>
+        </div>
+    </div>
+
+    {% if summary %}
+    <div class="summary-container">
+        <h2>Summary:</h2>
+        <div id="summary-text"></div>
+    </div>
+    {% endif %}
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('pdfInput');
+            const loader = document.getElementById('loader');
+            
+            if (fileInput.files.length > 0) {
+                document.getElementById('submitBtn').disabled = true;
+                loader.style.display = 'block';
+            }
+        });
+
+        // Typewriter effect for summary
+        {% if summary %}
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const summaryText = document.getElementById('summary-text');
+            const fullText = `{{ summary }}`;
+            let currentIndex = 0;
+            
+            function typeText() {
+                summaryText.innerHTML = fullText.substring(0, currentIndex) + '<span class="typing-cursor"></span>';
+                currentIndex++;
+                
+                if (currentIndex <= fullText.length) {
+                    setTimeout(typeText, 20);
+                } else {
+                    summaryText.innerHTML = fullText;
+                }
+            }
+            
+            typeText();
+        });
+        {% endif %}
+    </script>
+</body>
+</html>
